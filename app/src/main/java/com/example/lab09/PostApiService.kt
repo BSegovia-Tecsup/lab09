@@ -1,13 +1,21 @@
+// ProductApiService.kt
 package com.example.lab09
 
 import retrofit2.http.GET
-import retrofit2.http.Path
 
-interface PostApiService {
-    @GET("posts")
-    suspend fun getUserPosts(): List<PostModel>
-
-    @GET("posts/{id}")
-    suspend fun getUserPostById(@Path("id") id: Int): PostModel
-
+interface ProductApiService {
+    @GET("products")
+    suspend fun getProducts(): ProductResponse
 }
+
+data class ProductResponse(
+    val products: List<ProductModel>
+)
+
+data class ProductModel(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val price: Double,
+    val thumbnail: String
+)
