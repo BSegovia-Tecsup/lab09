@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.example.lab09
 
 import android.os.Bundle
@@ -14,11 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.lab09.ui.theme.Lab09Theme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,12 +40,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ProgPrincipal9() {
-    val urlBase = "https://jsonplaceholder.typicode.com/"
+    val urlBase = "https://dummyjson.com/"
     val retrofit = Retrofit.Builder()
         .baseUrl(urlBase)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val servicio = retrofit.create(PostApiService::class.java)
+    val servicio = retrofit.create(ProductApiService::class.java)
     val navController = rememberNavController()
 
     Scaffold(
@@ -62,7 +61,7 @@ fun BarraSuperior() {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "JSONPlaceHolder Access",
+                text = "DummyJSON Products",
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
@@ -72,7 +71,6 @@ fun BarraSuperior() {
         )
     )
 }
-
 
 @Composable
 fun BarraInferior(navController: NavHostController) {
@@ -86,20 +84,19 @@ fun BarraInferior(navController: NavHostController) {
             onClick = { navController.navigate("inicio") }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Outlined.Favorite, contentDescription = "Posts") },
-            label = { Text("Posts") },
-            selected = navController.currentDestination?.route == "posts",
-            onClick = { navController.navigate("posts") }
+            icon = { Icon(Icons.Outlined.Favorite, contentDescription = "Productos") },
+            label = { Text("Productos") },
+            selected = navController.currentDestination?.route == "products",
+            onClick = { navController.navigate("products") }
         )
     }
 }
-
 
 @Composable
 fun Contenido(
     pv: PaddingValues,
     navController: NavHostController,
-    servicio: PostApiService
+    servicio: ProductApiService
 ) {
     Box(
         modifier = Modifier
@@ -111,21 +108,14 @@ fun Contenido(
             startDestination = "inicio" // Ruta de inicio
         ) {
             composable("inicio") { ScreenInicio() }
-
-            composable("posts") { ScreenPosts(navController, servicio) }
-            composable("postsVer/{id}", arguments = listOf(
-                navArgument("id") { type = NavType.IntType} )
-            ) {
-                ScreenPost(navController, servicio, it.arguments!!.getInt("id"))
-            }
+            composable("products") { ScreenProducts(navController, servicio) }
         }
     }
 }
 
-
 @Composable
 fun ScreenInicio() {
-    Text("INICIO")
+    Text("Bienvenido a la aplicación de productos")
 }
 
 @Preview(showBackground = true)
